@@ -31,14 +31,11 @@ Python 3, [`requests`](https://pypi.org/project/requests/) (API calls), [`pyttsx
 ## Example
 ```
 Enter the name of the city: Lahore
-----------------------------------------
 Weather Report for: Lahore
-----------------------------------------
 Temperature: 34 degree C
 Condition: Sunny
 Humidity: 40%
 Rain Chance: 10%
-----------------------------------------
 (speaks the report aloud)
 ```
 
