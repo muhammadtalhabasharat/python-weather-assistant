@@ -1,12 +1,7 @@
-"""
-Python Weather Assistant
-Fetches the current weather and rain chance for a city using WeatherAPI,
-prints a report, and reads it aloud using text-to-speech.
+#Python Weather Assistant
+#Requires a free API key from https://www.weatherapi.com
 
-Requires a free API key from https://www.weatherapi.com, set as an
-environment variable named WEATHER_API_KEY (see README for setup).
-"""
-
+# libraries
 import os
 import json
 import requests
@@ -29,15 +24,15 @@ def main():
 
     api_key = os.getenv("WEATHER_API_KEY")
     if not api_key:
-        print("Error: WEATHER_API_KEY environment variable is not set.")
-        print("Get a free key from https://www.weatherapi.com and set it before running.")
+        print("Error: WEATHER_API_KEY environment variable is not set ")
+        print("Get a free key from https://www.weatherapi.com and set it before running ")
         return
 
     city = input("Enter the name of the city: ")
 
     try:
         response = get_weather(city, api_key)
-        wdic = response.json()
+        parser = response.json()
     except requests.exceptions.RequestException:
         print("Could not connect to the weather service. Check your internet connection.")
         return
@@ -45,34 +40,35 @@ def main():
         print("Unexpected response from the weather service.")
         return
 
-    if "error" in wdic:
-        print("Error:", wdic["error"]["message"])
+    if "error" in parser:
+        print("Error:", parser["error"]["message"])
         speak(engine, "City not found. Please try again.")
         return
 
     try:
-        temp = wdic["current"]["temp_c"]
-        condition = wdic["current"]["condition"]["text"]
-        humidity = wdic["current"]["humidity"]
-        rain_chance = wdic["forecast"]["forecastday"][0]["day"]["daily_chance_of_rain"]
+        temp = parser["current"]["temp_c"]
+        condition = parser["current"]["condition"]["text"]
+        humidity = parser["current"]["humidity"]
+        rain_chance = parser["forecast"]["forecastday"][0]["day"]["daily_chance_of_rain"]
     except KeyError:
         print("Unexpected data format from the weather service.")
         return
 
-    print("----------------------------------------")
+    
     print(f"Weather Report for: {city}")
-    print("----------------------------------------")
+    print("_____________________________________")
     print(f"Temperature: {temp} degree C")
     print(f"Condition: {condition}")
     print(f"Humidity: {humidity}%")
     print(f"Rain Chance: {rain_chance}%")
-    print("----------------------------------------")
+    print("_____________________________________________________")
 
     speech_text = (
         f"The weather in {city} is {condition}. "
         f"The temperature is {temp} degrees Celsius, "
         f"with a {rain_chance} percent chance of rain."
     )
+    
     speak(engine, speech_text)
 
 
